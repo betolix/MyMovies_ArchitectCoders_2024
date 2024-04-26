@@ -3,6 +3,7 @@ package io.h3llo.architectcoders
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,44 +32,37 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
+import io.h3llo.architectcoders.ui.screens.detail.DetailScreen
+import io.h3llo.architectcoders.ui.screens.home.HomeScreen
 import io.h3llo.architectcoders.ui.theme.ArchitectCodersTheme
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
-            ArchitectCodersTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = { Text(text = "Movies") }
-                            )
-                        },
-                        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-                    ) {padding ->
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(120.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.padding(4.dp),
-                            contentPadding = padding
-
-                        ) {
-                            items(movies) { movie ->
-                                MovieItem(movie = movie)
-                            }
-                        }
-                    }
-
+            //DetailScreen()
+            //HomeScreen()
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "home"){
+                composable("home"){
+                    HomeScreen(onClick = { movie ->
+                        navController.navigate("detail/${movie.id}")
+                    })
+                }
+                composable(
+                    "detail/{movieId}",
+                    arguments = listOf(navArgument("movieId"){type = NavType.IntType })
+                ){ backStackEntry ->
+                    val movieId = backStackEntry.arguments?.getInt("movieId")
+                    DetailScreen(movies.first { it.id == movieId })
                 }
             }
         }
@@ -76,22 +70,3 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun MovieItem(movie: Movie) {
-    Column {
-        AsyncImage(
-            model = movie.poster,
-            contentDescription = movie.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2 / 3f)
-                .clip(MaterialTheme.shapes.small)
-        )
-        Text(
-            text = movie.title,
-            style =MaterialTheme.typography.bodySmall,
-            maxLines = 1,
-            modifier = Modifier.padding(8.dp)
-        )
-    }
-}
