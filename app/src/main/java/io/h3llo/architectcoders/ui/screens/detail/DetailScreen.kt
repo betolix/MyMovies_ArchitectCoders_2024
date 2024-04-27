@@ -29,14 +29,14 @@ import io.h3llo.architectcoders.ui.screens.home.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(movie: Movie){
+fun DetailScreen(movie: Movie, onBack: () -> Unit){
     Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { Text(text = movie.title) },
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = onBack ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                 contentDescription = stringResource(id = R.string.back)

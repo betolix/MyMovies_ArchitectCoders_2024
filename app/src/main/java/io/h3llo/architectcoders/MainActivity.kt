@@ -62,7 +62,9 @@ class MainActivity : ComponentActivity() {
                     arguments = listOf(navArgument("movieId"){type = NavType.IntType })
                 ){ backStackEntry ->
                     val movieId = backStackEntry.arguments?.getInt("movieId")
-                    DetailScreen(movies.first { it.id == movieId })
+                    DetailScreen(
+                        movie = movies.first { it.id == movieId },
+                        onBack = { navController.popBackStack()})
                 }
             }
         }
