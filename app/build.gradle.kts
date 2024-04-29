@@ -63,6 +63,8 @@ dependencies {
     implementation(libs.coil.compose)
     // NAVIGATION
     implementation(libs.androidx.navigation.compose)
+    // PLAY SERVICES - LOCATION
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
